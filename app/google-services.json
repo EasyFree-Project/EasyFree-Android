@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "285092881895",
+    "firebase_url": "https://easyfree-24779.firebaseio.com",
+    "project_id": "easyfree-24779",
+    "storage_bucket": "easyfree-24779.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285092881895:android:c7aff0c13931c2db190942",
+        "android_client_info": {
+          "package_name": "com.sosin.easyfree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285092881895-nnb2m4htpm9teemtn6l8p5gb2205roti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhbH1tKspiVQeJqeDO1j4Sf8YzEcnNRtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285092881895-nnb2m4htpm9teemtn6l8p5gb2205roti.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
