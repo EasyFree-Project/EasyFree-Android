@@ -12,7 +12,14 @@
     <string name="signout_success">Signout success</string>
     <string name="signout_fail">Signout fail</string>
     <string name="signout_fail_null">Please enter your email and password</string>
-
+    <string name="password_check">Check Password</string>
     <string name="home">home</string>
-
+    <string name="id_check">Check ID</string>
+    <string name="upload_success">Success!</string>
+    <string name="signup_check">Sign Up</string>
+    <string name="signup_text">SignUp</string>
+    <string name="login_text">Login</string>
+    <string name="camera">Camera</string>
+    <string name="shopping_basket">Basket</string>
+    <string name="hint_image_content">Image Description</string>
 </resources>

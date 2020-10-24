@@ -6,23 +6,13 @@
         android:enabled="true"
         android:title="@string/home"></item>
     <item
-        android:id="@+id/action_serach"
-        android:icon="@drawable/ic_search"
-        android:enabled="true"
-        android:title="@string/home"></item>
-    <item
-        android:id="@+id/action_add_photo"
+        android:id="@+id/action_camera"
         android:icon="@drawable/ic_add_a_photo"
         android:enabled="true"
-        android:title="@string/home"></item>
+        android:title="@string/camera"></item>
     <item
-        android:id="@+id/action_favorite_alarm"
-        android:icon="@drawable/ic_favorite_border"
-        android:enabled="true"
-        android:title="@string/home"></item>
-    <item
-        android:id="@+id/action_account"
+        android:id="@+id/action_basket"
         android:icon="@drawable/ic_account"
         android:enabled="true"
-        android:title="@string/home"></item>
+        android:title="@string/shopping_basket"></item>
 </menu>
