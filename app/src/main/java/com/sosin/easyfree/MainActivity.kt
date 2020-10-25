@@ -1,13 +1,10 @@
 package com.sosin.easyfree
 
 import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sosin.easyfree.navigation.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,10 +29,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_camera -> {
-                startActivity(Intent(this, AddPhotoActivity::class.java))
-
-//                var cameraViewFragment = AddPhotoActivity()
-//                supportFragmentManager.beginTransaction().replace(R.id.main_content, cameraViewFragment).commit()
+                var cameraFragment = CameraFragment()
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, cameraFragment).commitAllowingStateLoss()
                 return true
             }
             R.id.action_basket ->{

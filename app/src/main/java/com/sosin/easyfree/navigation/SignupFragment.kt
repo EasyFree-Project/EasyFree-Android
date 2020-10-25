@@ -13,8 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.sosin.easyfree.MainActivity
 import com.sosin.easyfree.R
-import kotlinx.android.synthetic.main.activity_login_fragment.*
-import kotlinx.android.synthetic.main.activity_signup_fragment.*
+import kotlinx.android.synthetic.main.fragment_signup.*
 
 class SignupFragment : Fragment() {
 
@@ -23,7 +22,7 @@ class SignupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = LayoutInflater.from(activity).inflate(R.layout.activity_signup_fragment, container, false)
+        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_signup, container, false)
 
         view.findViewById<Button>(R.id.check_id_btn).setOnClickListener{
             checkId()

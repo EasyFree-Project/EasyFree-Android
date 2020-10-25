@@ -1,20 +1,17 @@
 package com.sosin.easyfree.navigation
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.sosin.easyfree.MainActivity
 import com.sosin.easyfree.R
-import kotlinx.android.synthetic.main.activity_login_fragment.*
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : Fragment() {
 
@@ -23,7 +20,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = LayoutInflater.from(activity).inflate(R.layout.activity_login_fragment, container, false)
+        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_login, container, false)
         view.findViewById<Button>(R.id.login_button).setOnClickListener{
             singinEmail()
         }
