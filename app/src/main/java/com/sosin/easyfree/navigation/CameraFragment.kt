@@ -43,7 +43,7 @@ class CameraFragment: Fragment() {
 
 class CaptureUtil {
     // 캡쳐가 저장될 외부 저장소
-    var CAPTURE_PATH = "/CAPTURE_TEST";
+    var CAPTURE_PATH = "/CAPTURE_TEST"
 
     fun captureView(view : View) {
         view.buildDrawingCache()
@@ -51,7 +51,7 @@ class CaptureUtil {
         var fos : FileOutputStream
 
         var strFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + CAPTURE_PATH
-        var folder : File = File(strFolderPath);
+        var folder : File = File(strFolderPath)
         if(!folder.exists()) {
             folder.mkdirs()
         }
@@ -60,8 +60,8 @@ class CaptureUtil {
         var fileCacheItem : File = File(strFilePath)
 
         try {
-            fos = FileOutputStream(fileCacheItem);
-//                captureView.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos = FileOutputStream(fileCacheItem)
+//                captureView.compress(Bitmap.CompressFormat.PNG, 100, fos)
         } catch (e : FileNotFoundException) {
             e.printStackTrace()
         }

@@ -22,4 +22,11 @@
     <string name="camera">Camera</string>
     <string name="shopping_basket">Basket</string>
     <string name="hint_image_content">Image Description</string>
+    <string name="displayName">Display Name</string>
+    <string name="message_progress">message</string>
+    <string name="signup_url">http://54.180.153.44:3003/auth/register</string>
+    <string name="server_test">http://54.180.153.44:3003/welcome</string>
+    <string name="price_text">Total Price</string>
+    <string name="order_btn">Order</string>
+    <string name="delete_item">Delete Item</string>
 </resources>

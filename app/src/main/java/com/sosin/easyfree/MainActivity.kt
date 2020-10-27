@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_basket ->{
-                var gridFragment = GridFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, gridFragment).commit()
+                var basketFragment = BasketFragment()
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, basketFragment).commit()
                 return true
             }
         }

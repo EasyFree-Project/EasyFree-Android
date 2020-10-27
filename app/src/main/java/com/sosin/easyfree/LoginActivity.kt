@@ -18,7 +18,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
 
         login_text.setOnClickListener {
             // 로그인 fragment로 전환

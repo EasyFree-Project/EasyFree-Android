@@ -43,6 +43,17 @@
             android:layout_marginRight="40dp"
             android:hint="@string/password_check">
         </EditText>
+
+        <EditText
+            android:id="@+id/signup_displayName_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="15dp"
+            android:hint="@string/displayName">
+        </EditText>
+
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"
