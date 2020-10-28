@@ -2,18 +2,25 @@ package com.sosin.easyfree.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyLog
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.sosin.easyfree.MainActivity
 import com.sosin.easyfree.R
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.json.JSONObject
 
 class LoginFragment : Fragment() {
+    var TAG = "LOGIN"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,35 +34,48 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    var auth : FirebaseAuth? = null
 //    로그인 시, 메인화면 전환
-    fun singinEmail(){
-        Toast.makeText(activity, "Login Message" + login_email_edittext.text.toString() + login_password_edittext.text.toString(), Toast.LENGTH_SHORT).show()
-//        로그인 인증
+    fun singinEmail() {
         if(login_email_edittext.text.toString() == "sosin" && login_password_edittext.text.toString() == "123123"){
-            moveMainPage()
+            moveMainPage(1)
+        }else{
+            //        로그인 인증
+            var queue = Volley.newRequestQueue(activity)
+            val params = JSONObject()
+            params.put("username", login_email_edittext.text.toString())
+            params.put("password", login_password_edittext.text.toString())
+
+            var jr = JsonObjectRequest(
+                    Request.Method.POST,
+                    getString(R.string.login_url),
+                    params,
+                    Response.Listener<JSONObject> { response ->
+                        try {
+                            var statusCode = response.getString("statusCode") //Key값을 받아오는 방식
+                            var message = response.getString("message")
+
+                            var member_idx = response.getJSONObject("data").getString("member_idx")
+                            Toast.makeText(activity, member_idx.toString(), Toast.LENGTH_LONG).show()
+                            moveMainPage(member_idx.toInt())
+                        } catch (e: Exception) {
+                            Log.d(TAG, "login fail" + response.toString())
+                        }
+                    },
+                    Response.ErrorListener { error ->
+                        VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
+                    })
+
+            queue.add(jr)
         }
 
-//        auth?.signInWithEmailAndPassword(login_email_edittext.text.toString(),
-//            login_password_edittext.text.toString())
-//            ?.addOnCompleteListener {
-//                    task ->
-//                if(task.isSuccessful){
-//                    //Login
-//                    moveMainPage(task.result!!.user)
-//                }else{
-//                    //Show the error
-//                    Toast.makeText(activity, task.exception?.message, Toast.LENGTH_LONG).show()
-//                }
-//            }
     }
 
     // User 정보 받아서 넣기
-    fun moveMainPage(){
-//        if(user != null){
-            startActivity(Intent(getActivity(), MainActivity::class.java))
-//        }
+    fun moveMainPage(member_idx:Int){
+        if(member_idx != null){
+            var mainintent = Intent(getActivity(), MainActivity::class.java)
+            mainintent.putExtra("uid", member_idx.toString())
+            startActivity(mainintent) //member idx 넘겨주기
+        }
     }
-
-
 }

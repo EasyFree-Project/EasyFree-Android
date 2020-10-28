@@ -1,24 +1,32 @@
 package com.sosin.easyfree.navigation
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
+import com.otaliastudios.cameraview.PictureResult
+import com.otaliastudios.cameraview.VideoResult
 import com.sosin.easyfree.R
+import kotlinx.android.synthetic.main.fragment_camera.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.OutputStream
+import java.util.stream.Stream
 
 
 class CameraFragment: Fragment() {
+    var TAG = "CAMERA"
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -30,8 +38,11 @@ class CameraFragment: Fragment() {
         camera.setLifecycleOwner(this)
 
         // 화면 1초마다 전송, 특정 뷰만 캡쳐
-        var captureUtil = CaptureUtil()
-        captureUtil.captureView(view)
+        activity?.findViewById<Button>(R.id.capture_btn)?.setOnClickListener {
+
+            var captureUtil = this.CaptureUtil()
+            captureUtil.captureView()
+        }
 
         return view
     }
@@ -39,31 +50,29 @@ class CameraFragment: Fragment() {
     fun sendScreen() {
 
     }
-}
+// in another java class
+    inner class CaptureUtil(){
+        var CAPTURE_PATH = "/CAPTURE_TEST"
+        fun captureView() {
+            val fos: FileOutputStream
+            val strFolderPath = Environment.getExternalStoragePublicDirectory(AppCompatActivity.DOWNLOAD_SERVICE).absolutePath + CAPTURE_PATH
 
-class CaptureUtil {
-    // 캡쳐가 저장될 외부 저장소
-    var CAPTURE_PATH = "/CAPTURE_TEST"
+            val folder = File(strFolderPath)
+            if (!folder.exists()) {
+                folder.mkdirs()
+            }
 
-    fun captureView(view : View) {
-        view.buildDrawingCache()
-//            var captureView : Bitmap = View.getDrawingCache()
-        var fos : FileOutputStream
+            val strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png"
+            val fileCacheItem = File(strFilePath)
 
-        var strFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + CAPTURE_PATH
-        var folder : File = File(strFolderPath)
-        if(!folder.exists()) {
-            folder.mkdirs()
-        }
+            try {
+                fos = FileOutputStream(fileCacheItem)
+                camera.drawToBitmap().compress(Bitmap.CompressFormat.PNG, 100, fos)
 
-        var strFilePath : String = strFolderPath + "/" + System.currentTimeMillis() + ".png"
-        var fileCacheItem : File = File(strFilePath)
-
-        try {
-            fos = FileOutputStream(fileCacheItem)
-//                captureView.compress(Bitmap.CompressFormat.PNG, 100, fos)
-        } catch (e : FileNotFoundException) {
-            e.printStackTrace()
+            } catch (e: FileNotFoundException) {
+                Log.d(TAG, e.toString())
+            }
         }
     }
+
 }

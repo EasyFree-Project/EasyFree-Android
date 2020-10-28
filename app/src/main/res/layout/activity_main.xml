@@ -43,6 +43,20 @@
         android:background="@color/colorDivision"
         android:orientation="horizontal">
     </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_navigation">
+        <Button
+            android:id="@+id/capture_btn"
+            android:text="캡처"
+            android:layout_below="@+id/main_content"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </Button>
+    </FrameLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

@@ -51,14 +51,18 @@ class SignupFragment : Fragment() {
         ).show()
     }
 
-    fun moveMainPage(responseCode: Int){
-        if(responseCode == 200){
-            startActivity(Intent(getActivity(), MainActivity::class.java))
+    fun moveMainPage(member_idx: Int){
+        if(member_idx != null){
+            var mainintent = Intent(getActivity(), MainActivity::class.java)
+            mainintent.putExtra("uid", member_idx.toString())
+            startActivity(mainintent) // member_idx 넘겨주기
         }
     }
 
     fun signUp(){
-        var queue = Volley.newRequestQueue(activity)
+        if(signup_password1_edittext.text.toString() == signup_password2_edittext.text.toString()){
+
+            var queue = Volley.newRequestQueue(activity)
 //        var stringRequest = StringRequest(
 //            Request.Method.POST,
 //            getString(R.string.server_test),
@@ -73,64 +77,40 @@ class SignupFragment : Fragment() {
 //                }
 //            })
 
-        val params = JSONObject()
-        params.put("username", "onapp")
-        params.put("password", "123123")
-        params.put("displayName", "jaejin")
+            val params = JSONObject()
+            params.put("username", signup_email_edittext.text.toString())
+            params.put("password", signup_password1_edittext.text.toString())
+            params.put("displayName", signup_displayName_edittext.text.toString())
 
-        var jr = JsonObjectRequest(
-            Request.Method.POST,
-            getString(R.string.signup_url),
-            params,
-            Response.Listener<JSONObject> { response ->
-                Log.d(TAG, "/post request OK! Response: $response")
-            },
-            Response.ErrorListener { error ->
-                VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
-            })
-//            {
-//            @Throws(AuthFailureError::class)
-//            fun getHeaders(): Map<String, String> {
-//                val headers = HashMap<String, String>()
-//                headers.put("Content-Type", "application/json")
-//                return headers
-//            }
+            var jr = JsonObjectRequest(
+                    Request.Method.POST,
+                    getString(R.string.signup_url),
+                    params,
+                    Response.Listener<JSONObject> { response ->
+                        try{
+                            var statusCode = response.getString("statusCode")
+                            var message = response.getString("message")
+                            var member_idx = response.getJSONObject("data").getString("member_idx")
+                            moveMainPage(member_idx.toInt())
+                        } catch (e : Exception){
+                            Log.d(TAG, "signup fail" + response.toString())
+                        }
 
-        queue.add(jr)
+                    },
+                    Response.ErrorListener { error ->
+                        VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
+                    })
+
+            queue.add(jr)
+        }
+        else{
+            Toast.makeText(activity, "비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onStop() {
         super.onStop()
 //        queue?.cancelAll(TAG)
-    }
-
-    fun sendcall() {
-        //RequestQueue initialized
-        var mRequestQueue = Volley.newRequestQueue(activity)
-
-        //String Request initialized
-        var mStringRequest = object : StringRequest(Request.Method.POST, getString(R.string.signup_url), Response.Listener { response ->
-            Toast.makeText(activity, "Logged In Successfully" + response.toString(), Toast.LENGTH_SHORT).show()
-        }, Response.ErrorListener { error ->
-            Log.d("This is the error", "Error :" + error.toString())
-            Toast.makeText(activity, "Please make sure you enter correct password and username", Toast.LENGTH_SHORT).show()
-        }) {
-            override fun getBodyContentType(): String {
-                return "application/json"
-            }
-
-            @Throws(AuthFailureError::class)
-            override fun getBody(): ByteArray {
-                val params2 = HashMap<String, String>()
-                params2.put("username", "onapp")
-                params2.put("password", signup_password1_edittext.text.toString())
-                params2.put("displayName", signup_displayName_edittext.text.toString())
-                Log.d("This is the error", JSONObject(params2 as Map<*, *>).toString())
-                return JSONObject(params2 as Map<*, *>).toString().toByteArray()
-            }
-
-        }
-        mRequestQueue!!.add(mStringRequest!!)
     }
 
 }
