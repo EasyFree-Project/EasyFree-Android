@@ -27,6 +27,7 @@
     <string name="signup_url">http://54.180.153.44:3003/auth/register</string>
     <string name="server_test">http://54.180.153.44:3003/welcome</string>
     <string name="login_url">http://54.180.153.44:3003/auth/login</string>
+    <string name="product_url">http://54.180.153.44:3003/product/</string>
     <string name="price_text">Total Price</string>
     <string name="order_btn">Order</string>
     <string name="delete_item">Delete Item</string>

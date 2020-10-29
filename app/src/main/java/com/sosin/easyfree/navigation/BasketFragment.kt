@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sosin.easyfree.R
 import com.sosin.easyfree.navigation.model.BasketDTO
+import com.sosin.easyfree.navigation.user.App
 
 class BasketFragment: Fragment(){
     override fun onCreateView(
@@ -26,20 +27,13 @@ class BasketFragment: Fragment(){
         var basketDTOs: ArrayList<BasketDTO> = arrayListOf()
 
         init {
-
-            var item = BasketDTO("까르보 불닭볶음면", 1, 1500)
-
-            var range = arrayOf(1,2,3,4,5)
-            for(i in range){
-                basketDTOs.add(item!!)
-            }
-
+            basketDTOs = App.BasketDTOs
             notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             var view =
-                LayoutInflater.from(parent.context).inflate(R.layout.item_detail, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.basket_detail, parent, false)
             return CustomViewHolder(view)
         }
 

@@ -78,4 +78,5 @@ class LoginFragment : Fragment() {
             startActivity(mainintent) //member idx 넘겨주기
         }
     }
+
 }
