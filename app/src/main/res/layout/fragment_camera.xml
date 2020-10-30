@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/camera_layout"
+<LinearLayout android:id="@+id/camera_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.otaliastudios.cameraview.CameraView
-        android:id="@+id/camera"
-        android:keepScreenOn="true"
-        app:cameraMode="picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+<!--    <com.sosin.easyfree.navigation.CameraSurfaceView-->
+<!--        android:id="@+id/surfaceview"-->
+<!--        android:layout_weight="1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
-</FrameLayout>
+<!--    </com.sosin.easyfree.navigation.CameraSurfaceView>-->
+<!--    <ImageView-->
+<!--        android:id="@+id/pictureimage"-->
+<!--        android:layout_weight="1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--    </ImageView>-->
+<!--    <Button-->
+<!--        android:id="@+id/capturebutton"-->
+<!--        android:layout_weight="1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--    </Button>-->
+<!--    <com.otaliastudios.cameraview.CameraView-->
+<!--        android:id="@+id/camera"-->
+<!--        android:keepScreenOn="true"-->
+<!--        app:cameraMode="picture"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+</LinearLayout>

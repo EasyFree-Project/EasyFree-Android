@@ -12,12 +12,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.sosin.easyfree.navigation.DetailViewFragment
 import com.sosin.easyfree.navigation.LoginFragment
 import com.sosin.easyfree.navigation.SignupFragment
+import com.sosin.easyfree.navigation.TestActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
 
         login_text.setOnClickListener {
             // 로그인 fragment로 전환
@@ -30,6 +32,10 @@ class LoginActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().replace(R.id.login_content, signupFragment).commitAllowingStateLoss()
         }
         login_text.performClick()
+
+        test_button.setOnClickListener {
+            startActivity(Intent(this, TestActivity::class.java))
+        }
 
     }
 }

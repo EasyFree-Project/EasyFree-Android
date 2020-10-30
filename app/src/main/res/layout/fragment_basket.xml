@@ -55,13 +55,15 @@
                     android:layout_height="match_parent"
                     android:text="@string/price_text"/>
                 <TextView
+                    android:text="0"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:id="@+id/total_price_value"
+                    android:id="@+id/total_price_value_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </LinearLayout>
             <Button
+                android:id="@+id/order_to_server_btn"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:text="@string/order_btn"

@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.sosin.easyfree.MainActivity
 import com.sosin.easyfree.R
+import com.sosin.easyfree.navigation.user.App
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.json.JSONObject
 
@@ -36,7 +37,7 @@ class LoginFragment : Fragment() {
 
 //    로그인 시, 메인화면 전환
     fun singinEmail() {
-        if(login_email_edittext.text.toString() == "sosin" && login_password_edittext.text.toString() == "123123"){
+        if(login_email_edittext.text.toString() == "sosin" && login_password_edittext.text.toString() == "1"){
             moveMainPage(1)
         }else{
             //        로그인 인증
@@ -55,7 +56,6 @@ class LoginFragment : Fragment() {
                             var message = response.getString("message")
 
                             var member_idx = response.getJSONObject("data").getString("member_idx")
-                            Toast.makeText(activity, member_idx.toString(), Toast.LENGTH_LONG).show()
                             moveMainPage(member_idx.toInt())
                         } catch (e: Exception) {
                             Log.d(TAG, "login fail" + response.toString())
@@ -64,17 +64,15 @@ class LoginFragment : Fragment() {
                     Response.ErrorListener { error ->
                         VolleyLog.e(TAG, "/post request fail! Error: ${error.message}")
                     })
-
             queue.add(jr)
         }
-
     }
 
     // User 정보 받아서 넣기
     fun moveMainPage(member_idx:Int){
         if(member_idx != null){
             var mainintent = Intent(getActivity(), MainActivity::class.java)
-            mainintent.putExtra("uid", member_idx.toString())
+            App.uid = member_idx
             startActivity(mainintent) //member idx 넘겨주기
         }
     }

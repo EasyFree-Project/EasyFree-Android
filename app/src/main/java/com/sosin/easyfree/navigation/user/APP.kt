@@ -16,7 +16,9 @@ class App : Application() {
 
     companion object {
         lateinit var INSTANCE: App
-        var BasketDTOs = ArrayList<BasketDTO>() // 데이터 나중에 받아오기
-        var ProductDTOs = ArrayList<ProductDTO>() // 데이터 나중에 받아오기
+        var uid : Int = -1
+        var category_number : String = "0"
+        var ProductDTOs = ArrayList<ProductDTO>()
+        var BasketDTOs = ArrayList<BasketDTO>()
     }
 }

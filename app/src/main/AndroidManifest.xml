@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyFree"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ProductDetailActivity"></activity>
+        <activity android:name=".navigation.TestActivity"></activity>
+        <activity android:name=".ProductDetailActivity" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
