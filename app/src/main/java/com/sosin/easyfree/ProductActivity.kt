@@ -14,6 +14,7 @@ import com.sosin.easyfree.navigation.model.ProductDTO
 import com.sosin.easyfree.navigation.user.App
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.product_detail.view.*
+import java.lang.Exception
 
 
 class ProductActivity : AppCompatActivity() {
@@ -31,9 +32,15 @@ class ProductActivity : AppCompatActivity() {
     inner class ProductViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var productDTOs : ArrayList<ProductDTO> = arrayListOf()
         init {
-            productDTOs = App.ProductDTOs
-            category_text.text = productDTOs[0].category_number
-            notifyDataSetChanged()
+            try{
+                productDTOs = App.ProductDTOs
+                category_text.text = productDTOs[0].category_number
+                notifyDataSetChanged()
+            }
+            catch (e: Exception){
+                productDTOs = App.ProductDTOs
+                notifyDataSetChanged()
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

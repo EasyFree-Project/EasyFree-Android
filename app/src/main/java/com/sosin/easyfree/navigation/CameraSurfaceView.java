@@ -1,22 +1,16 @@
 package com.sosin.easyfree.navigation;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageView;
-
 import java.io.IOException;
-
-import kotlin.jvm.JvmStatic;
 
 public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
     SurfaceHolder holder;
-    Camera camera = null;
+    Camera camera;
 
     public CameraSurfaceView(Context context) {
         super(context);
@@ -39,7 +33,9 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     public void surfaceCreated(SurfaceHolder holder) {
         camera = Camera.open();
         camera.setDisplayOrientation(90);
+
         // 카메라 사이즈 조정
+
 //        lp.width = previewSurfaceWidth;
 //        lp.height = (int) (previewSurfaceWidth / aspect);
 

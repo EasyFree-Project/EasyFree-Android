@@ -43,31 +43,6 @@
         android:background="@color/colorDivision"
         android:orientation="horizontal">
     </LinearLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_navigation">
-        <Button
-            android:id="@+id/capture_btn"
-            android:text="캡처"
-            android:layout_below="@+id/main_content"
-            android:layout_above="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </Button>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_navigation"
-        android:layout_marginBottom="80dp">
-        <Button
-            android:text="제품리스트 가져오기"
-            android:id="@+id/product_list_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </Button>
-    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
