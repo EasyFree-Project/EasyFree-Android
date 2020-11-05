@@ -1,11 +1,6 @@
 package com.sosin.easyfree.navigation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -16,8 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +25,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.sosin.easyfree.ProductActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sosin.easyfree.R;
 import com.sosin.easyfree.navigation.model.ProductDTO;
 import com.sosin.easyfree.navigation.user.App;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class CameraFragment extends Fragment {
     public RequestQueue queue;
     public String TAG = "CAMERA";
     public RelativeLayout rl;
-    public Button[] odbuttons = new Button[20];
+    public ImageView[] odbuttons = new ImageView[10];
 
     @Nullable
     @Override
@@ -59,7 +60,7 @@ public class CameraFragment extends Fragment {
             displayWidth = display.getWidth();
             displayHeight = display.getHeight();
         }
-        Toast.makeText(getActivity(), displayWidth + " : " + displayHeight, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), displayWidth + " : " + displayHeight, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class CameraFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try{
-                    for (Button odbutton : odbuttons) {
+                    for (ImageView odbutton : odbuttons) {
                         ViewGroup layout = (ViewGroup) odbutton.getParent();
                         if (null != layout) //for safety only  as you are doing onClick
                             layout.removeView(odbutton);
@@ -109,9 +110,9 @@ public class CameraFragment extends Fragment {
                             JSONArray boxes = response.getJSONObject("data").getJSONArray("result");
                             for(int i = 0; i < odbuttons.length; i++){
                                 if (i < boxes.length()){
-                                    odbuttons[i] = new Button(getContext());
+                                    odbuttons[i] = new ImageView(getContext());
                                     String[] box_info = boxes.get(i).toString().split(" ");
-                                    odbuttons[i].setText(box_info[4]);
+                                    odbuttons[i].setImageDrawable(getResources().getDrawable(R.drawable.odbox));
                                     int x1 = Integer.parseInt(box_info[0]);
                                     int x2 = Integer.parseInt(box_info[1]);
                                     int y1 = Integer.parseInt(box_info[2]);
@@ -122,8 +123,6 @@ public class CameraFragment extends Fragment {
                                     odbuttons[i].setLayoutParams(lp);
                                     odbuttons[i].setX((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x1*displayWidth/512, getResources().getDisplayMetrics()));
                                     odbuttons[i].setY((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y1*displayWidth/512, getResources().getDisplayMetrics()));
-//                                    odbuttons[i].setVisibility(View.VISIBLE);
-
                                     odbuttons[i].setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -201,7 +200,6 @@ public class CameraFragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
                 }
             });
             jsonRequest.setTag(TAG);
@@ -212,8 +210,9 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    public void moveProductPage(){
-        Intent intent = new Intent(getActivity(), ProductActivity.class);
-        startActivityForResult(intent,1001);
+    public void moveProductPage() {
+        BottomNavigationView bottom_navigation = (BottomNavigationView) getActivity().findViewById(R.id.bottom_navigation);
+        bottom_navigation.setSelectedItemId(R.id.action_list);
+        getFragmentManager().beginTransaction().replace(R.id.main_content, new ProductViewFragment()).commit();
     }
 }

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".navigation.LoginFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/login_email_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:hint="@string/email">
-        </EditText>
+            android:hint="@string/email"></EditText>
+
         <EditText
             android:id="@+id/login_password_edittext"
             android:inputType="textPassword"
@@ -26,17 +28,6 @@
             android:layout_marginRight="40dp"
             android:hint="@string/password">
         </EditText>
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="35dp"
-            android:text="@string/signin_email"
-            android:theme="@style/ButtonStyle">
-        </Button>
     </LinearLayout>
 
 </RelativeLayout>

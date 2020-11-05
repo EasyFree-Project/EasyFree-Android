@@ -3,10 +3,7 @@ package com.sosin.easyfree
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import com.bumptech.glide.Glide
-import com.sosin.easyfree.navigation.BasketFragment
 import com.sosin.easyfree.navigation.model.BasketDTO
 import com.sosin.easyfree.navigation.model.ProductDTO
 import com.sosin.easyfree.navigation.user.App
@@ -23,7 +20,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         Glide.with(this).load(productinfo?.url).into(product_detail_image)
         product_detail_name_text.setText(productinfo?.product_name)
-        product_detail_price_text.setText(productinfo?.product_price.toString())
+        product_detail_price_text.setText(productinfo?.product_price.toString() + "원")
         product_detail_content_text.setText(productinfo?.product_content)
         product_detail_location_text.setText(productinfo?.producer_location)
         product_detail_avgreview_text.setText(productinfo?.avg_review)
@@ -66,7 +63,7 @@ class ProductDetailActivity : AppCompatActivity() {
         }
         finish()
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("toBasket", 1)
+        intent.putExtra("toScreen", 1)
         this.finish()
         startActivity(intent)
 

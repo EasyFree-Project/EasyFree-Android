@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
+        android:id="@+id/action_list"
+        android:icon="@drawable/ic_icon_list"
         android:enabled="true"
-        android:title="@string/home"></item>
+        android:title="@string/list"></item>
     <item
         android:id="@+id/action_camera"
-        android:icon="@drawable/ic_add_a_photo"
+        android:icon="@drawable/ic_icon_camera"
         android:enabled="true"
         android:title="@string/camera"></item>
     <item
         android:id="@+id/action_basket"
-        android:icon="@drawable/ic_account"
+        android:icon="@drawable/ic_icon_shoppingcart"
         android:enabled="true"
         android:title="@string/shopping_basket"></item>
 </menu>
