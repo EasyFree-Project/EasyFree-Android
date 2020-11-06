@@ -1,8 +1,11 @@
 package com.sosin.easyfree.navigation;
 
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Display;
@@ -10,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -26,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sosin.easyfree.ApiService;
 import com.sosin.easyfree.R;
 import com.sosin.easyfree.navigation.model.ProductDTO;
 import com.sosin.easyfree.navigation.user.App;
@@ -33,6 +37,18 @@ import com.sosin.easyfree.navigation.user.App;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.Callback;
 
 public class CameraFragment extends Fragment {
     public CameraSurfaceView surfaceView;
@@ -40,23 +56,28 @@ public class CameraFragment extends Fragment {
     public String TAG = "CAMERA";
     public RelativeLayout rl;
     public ImageView[] odbuttons = new ImageView[10];
+    ApiService apiService;
+    ProgressDialog dialog = null;
+    String upLoadServerUri = null;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        upLoadServerUri = getString(R.string.model_url);
+        initRetrofitClient();
         return inflater.inflate(R.layout.fragment_camera, container, false);
     }
+
     public int displayWidth, displayHeight;
 
     private void getDisplaySize() {
         Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        if(android.os.Build.VERSION.SDK_INT >= 13) {
+        if (android.os.Build.VERSION.SDK_INT >= 13) {
             Point point = new Point();
             display.getSize(point);
             displayWidth = point.x;
             displayHeight = point.y;
-        }
-        else {
+        } else {
             displayWidth = display.getWidth();
             displayHeight = display.getHeight();
         }
@@ -68,15 +89,13 @@ public class CameraFragment extends Fragment {
         surfaceView = (CameraSurfaceView) getView().findViewById(R.id.surfaceview);
         rl = (RelativeLayout) getView().findViewById(R.id.camera_relativelayout);
         getDisplaySize();
-//        for (int i = 0; i < odbuttons.length; i++) {
-//            odbuttons[i] = new Button(getContext());
-//            odbuttons[i].setVisibility(View.GONE);
-//        }
 
         getView().findViewById(R.id.capturebutton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                dialog = ProgressDialog.show(getActivity(), "", "Uploading File...");
+
+                try {
                     for (ImageView odbutton : odbuttons) {
                         ViewGroup layout = (ViewGroup) odbutton.getParent();
                         if (null != layout) //for safety only  as you are doing onClick
@@ -84,25 +103,111 @@ public class CameraFragment extends Fragment {
                     }
                 } catch (Exception e) {
                 }
-                capture();
+//                capture();
+                upload_file();
             }
         });
 
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void capture() {
+    private void initRetrofitClient() {
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        apiService = new Retrofit.Builder().baseUrl("http://54.180.153.44:3003").client(client).build().create(ApiService.class);
+    }
+
+    private void multipartImageUpload(byte[] data) {
+        try {
+            File filesDir = getActivity().getFilesDir();
+            File file = new File(filesDir, "image" + ".png");
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(data);
+            fos.flush();
+            fos.close();
+
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
+            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload");
+
+            Call<ResponseBody> req = apiService.postImage(body, name);
+            req.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    Toast.makeText(getActivity(), response.code() + " ", Toast.LENGTH_SHORT).show();
+                    String responseData = response.body().toString();
+                    try {
+                        JSONObject js = new JSONObject(responseData);
+                        JSONArray boxes = js.getJSONObject("data").getJSONArray("result");
+                        for(int i = 0; i < odbuttons.length; i++){
+                            if (i < boxes.length()){
+                                odbuttons[i] = new ImageView(getContext());
+                                String[] box_info = boxes.get(i).toString().split(" ");
+                                odbuttons[i].setImageDrawable(getResources().getDrawable(R.drawable.odbox));
+                                int x1 = Integer.parseInt(box_info[0]);
+                                int x2 = Integer.parseInt(box_info[1]);
+                                int y1 = Integer.parseInt(box_info[2]);
+                                int y2 = Integer.parseInt(box_info[3]);
+                                int box_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (x2-x1)*displayWidth/512, getResources().getDisplayMetrics());
+                                int box_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (y2-y1)*displayHeight/512, getResources().getDisplayMetrics());
+                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(box_width, box_height);
+                                odbuttons[i].setLayoutParams(lp);
+                                odbuttons[i].setX((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x1*displayWidth/512, getResources().getDisplayMetrics()));
+                                odbuttons[i].setY((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y1*displayWidth/512, getResources().getDisplayMetrics()));
+                                odbuttons[i].setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        getItemLists(box_info[4]);
+                                    }
+                                });
+                                rl.addView(odbuttons[i]);
+                            }
+                            else{
+//                                    odbuttons[i].setVisibility(View.GONE);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Request failed", Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void upload_file(){
         surfaceView.capture(new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                queue = Volley.newRequestQueue(getActivity());
+                multipartImageUpload(data);
+            }
+        });
+
+    }
+
+    public void capture() {
+        surfaceView.capture(new Camera.PictureCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
 
                 JSONObject params = new JSONObject();
-                try {
-                    params.put("photo", data);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    params.put("photo", a);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 final JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, getString(R.string.model_url), params, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -160,7 +265,6 @@ public class CameraFragment extends Fragment {
             }
         });
     }
-
 
     public void getItemLists(String category_number) {
         App.Companion.setContext(getActivity());
