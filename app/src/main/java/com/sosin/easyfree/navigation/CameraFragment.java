@@ -1,12 +1,16 @@
 package com.sosin.easyfree.navigation;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -93,7 +97,7 @@ public class CameraFragment extends Fragment {
         getView().findViewById(R.id.capturebutton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = ProgressDialog.show(getActivity(), "", "Uploading File...");
+//                dialog = ProgressDialog.show(getActivity(), "", "Uploading File...");
 
                 try {
                     for (ImageView odbutton : odbuttons) {
@@ -113,7 +117,7 @@ public class CameraFragment extends Fragment {
 
     private void initRetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().build();
-        apiService = new Retrofit.Builder().baseUrl("http://54.180.153.44:3003").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://220.87.55.135:3003").client(client).build().create(ApiService.class);
     }
 
     private void multipartImageUpload(byte[] data) {
@@ -127,15 +131,20 @@ public class CameraFragment extends Fragment {
             fos.close();
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
-            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload");
+            MultipartBody.Part body = MultipartBody.Part.createFormData("productImg", file.getName(), reqFile);
+            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "productImg");
 
             Call<ResponseBody> req = apiService.postImage(body, name);
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    Toast.makeText(getActivity(), response.code() + " ", Toast.LENGTH_SHORT).show();
-                    String responseData = response.body().toString();
+//                    Toast.makeText(getActivity(), response.code() + " ", Toast.LENGTH_SHORT).show();
+                    String responseData = null;
+                    try {
+                        responseData = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     try {
                         JSONObject js = new JSONObject(responseData);
                         JSONArray boxes = js.getJSONObject("data").getJSONArray("result");
@@ -152,8 +161,8 @@ public class CameraFragment extends Fragment {
                                 int box_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (y2-y1)*displayHeight/512, getResources().getDisplayMetrics());
                                 ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(box_width, box_height);
                                 odbuttons[i].setLayoutParams(lp);
-                                odbuttons[i].setX((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x1*displayWidth/512, getResources().getDisplayMetrics()));
-                                odbuttons[i].setY((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, y1*displayWidth/512, getResources().getDisplayMetrics()));
+                                odbuttons[i].setX(x1*displayWidth/512); // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, , getResources().getDisplayMetrics())
+                                odbuttons[i].setY(y1*displayWidth/512); // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, , getResources().getDisplayMetrics())
                                 odbuttons[i].setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -166,7 +175,6 @@ public class CameraFragment extends Fragment {
 //                                    odbuttons[i].setVisibility(View.GONE);
                             }
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -185,15 +193,14 @@ public class CameraFragment extends Fragment {
         }
     }
 
-
     public void upload_file(){
         surfaceView.capture(new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 multipartImageUpload(data);
+                camera.startPreview();
             }
         });
-
     }
 
     public void capture() {

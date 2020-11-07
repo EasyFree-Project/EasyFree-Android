@@ -10,11 +10,11 @@
     <string name="camera">CAMERA</string>
     <string name="shopping_basket">CART</string>
     <string name="displayName">Display Name</string>
-    <string name="signup_url">http://54.180.153.44:3003/auth/register</string>
-    <string name="login_url">http://54.180.153.44:3003/auth/login</string>
-    <string name="product_url">http://54.180.153.44:3003/product/</string>
-    <string name="purchase_url">http://54.180.153.44:3003/purchase</string>
-    <string name="model_url">http://54.180.153.44:3003/model</string>
+    <string name="signup_url">http://220.87.55.135:3003/auth/register</string>
+    <string name="login_url">http://220.87.55.135:3003/auth/login</string>
+    <string name="product_url">http://220.87.55.135:3003/product/</string>
+    <string name="purchase_url">http://220.87.55.135:3003/purchase</string>
+    <string name="model_url">http://220.87.55.135:3003/model</string>
     <string name="price_text">Total Price</string>
     <string name="order_btn">Order</string>
     <string name="delete_item">Delete Item</string>
