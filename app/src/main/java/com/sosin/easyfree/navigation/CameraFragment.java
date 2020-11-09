@@ -61,7 +61,6 @@ public class CameraFragment extends Fragment {
     public RelativeLayout rl;
     public ImageView[] odbuttons = new ImageView[10];
     ApiService apiService;
-    ProgressDialog dialog = null;
     String upLoadServerUri = null;
 
     @Nullable
@@ -138,7 +137,6 @@ public class CameraFragment extends Fragment {
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                    Toast.makeText(getActivity(), response.code() + " ", Toast.LENGTH_SHORT).show();
                     String responseData = null;
                     try {
                         responseData = response.body().string();
@@ -148,21 +146,22 @@ public class CameraFragment extends Fragment {
                     try {
                         JSONObject js = new JSONObject(responseData);
                         JSONArray boxes = js.getJSONObject("data").getJSONArray("result");
-                        for(int i = 0; i < odbuttons.length; i++){
-                            if (i < boxes.length()){
+                        for (int i = 0; i < odbuttons.length; i++) {
+                            if (i < boxes.length()) {
                                 odbuttons[i] = new ImageView(getContext());
                                 String[] box_info = boxes.get(i).toString().split(" ");
                                 odbuttons[i].setImageDrawable(getResources().getDrawable(R.drawable.odbox));
-                                int x1 = Integer.parseInt(box_info[0]);
-                                int x2 = Integer.parseInt(box_info[1]);
-                                int y1 = Integer.parseInt(box_info[2]);
-                                int y2 = Integer.parseInt(box_info[3]);
-                                int box_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (x2-x1)*displayWidth/512, getResources().getDisplayMetrics());
-                                int box_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (y2-y1)*displayHeight/512, getResources().getDisplayMetrics());
+                                float x1 = Float.parseFloat(box_info[0]);
+                                float x2 = Float.parseFloat(box_info[1]);
+                                float y1 = Float.parseFloat(box_info[2]);
+                                float y2 = Float.parseFloat(box_info[3]);
+                                int box_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (x2 - x1) * displayWidth / 512, getResources().getDisplayMetrics());
+                                int box_height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (y2 - y1) * displayHeight / 512, getResources().getDisplayMetrics());
                                 ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(box_width, box_height);
                                 odbuttons[i].setLayoutParams(lp);
-                                odbuttons[i].setX(x1*displayWidth/512); // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, , getResources().getDisplayMetrics())
-                                odbuttons[i].setY(y1*displayWidth/512); // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, , getResources().getDisplayMetrics())
+
+                                odbuttons[i].setX(x1*displayWidth/1024);//TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x1 / 512 * , getResources().getDisplayMetrics())); // (x1+x2)/1024
+                                odbuttons[i].setY((y1+y2)/4*getView().getHeight()/512 - getView().getHeight()/4);//TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (y1 / 512 - 0.5f) * getView().getHeight(), getResources().getDisplayMetrics())); // (y1+y2)/1024
                                 odbuttons[i].setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -170,13 +169,15 @@ public class CameraFragment extends Fragment {
                                     }
                                 });
                                 rl.addView(odbuttons[i]);
-                            }
-                            else{
+                                Toast.makeText(getActivity(), "버튼 생성 완료 !" + odbuttons[0].getY(), Toast.LENGTH_LONG).show();
+
+                            } else {
 //                                    odbuttons[i].setVisibility(View.GONE);
                             }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(getActivity(), "인식된 제품이 없습니다.", Toast.LENGTH_LONG).show();
                     }
                 }
 
